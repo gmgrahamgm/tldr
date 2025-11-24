@@ -1,34 +1,86 @@
-# TL;DR
+# TOS Helper (TL;DR)
 
-Chrome extension that detects Terms of Service pages and generates AI-powered summaries with trust scores.
+Chrome extension that automatically detects Terms of Service pages and generates AI-powered summaries with quantifiable trust scores.
 
-## Setup
+## Features
 
-### Extension
-1. Open Chrome and navigate to `chrome://extensions`
-2. Enable "Developer mode" in the top right
+- 🤖 **AI-Powered Analysis** - Uses OpenAI GPT-4o-mini to parse and summarize Terms of Service
+- 📊 **Trust Score (0-100)** - Quantifiable rating based on data collection, sharing, user control, and term fairness
+- ⚠️ **Risk Highlights** - Plain-language explanations of concerning clauses with real-world examples
+- 📋 **Data Sharing Breakdown** - Clear categorization of what data is collected and who receives it
+- ♿ **WCAG 2.1 AA Compliant** - Full keyboard navigation, screen reader support, and dark mode
+- 🔄 **Smart Caching** - Local storage of analysis results to minimize API calls
+- 🌐 **Environment Detection** - Automatically switches between local development and production backend
+
+## Installation
+
+See **[INSTALL.md](INSTALL.md)** for detailed installation instructions.
+
+**Quick Start:**
+1. Download `tos-helper-extension.zip` and extract
+2. Open `chrome://extensions/` and enable Developer Mode
 3. Click "Load unpacked" and select the `extension` folder
 
-### Backend Server
+## Architecture
+
+### Production Deployment
+
+- **Extension:** Chrome Extension (Manifest V3)
+- **Backend:** Flask API with Docker on Render free tier
+- **AI Model:** OpenAI GPT-4o-mini
+- **Deployment URL:** https://tldr-xv48.onrender.com
+
+### Local Development
+
+**Extension:**
+1. Load the unpacked extension from `chrome://extensions/`
+2. Extension auto-detects if local backend is running
+
+**Backend Server:**
 1. Navigate to the `backend` folder
 2. Create a virtual environment: `python -m venv venv`
 3. Activate it: `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux)
 4. Install dependencies: `pip install -r requirements.txt`
-5. Create `.env` file with your `OPENAI_API_KEY`
+5. Copy `.env.example` to `.env` and add your `OPENAI_API_KEY`
 6. Run the server: `python app.py`
+
+The extension will automatically use `localhost:5000` when available, otherwise falls back to production.
+
+## Deployment Guide
+
+### Production (Render)
+
+The `production` branch is configured for deployment to Render:
+
+1. **Push to GitHub:** Changes to `production` branch auto-deploy
+2. **Render Configuration:** `render.yaml` defines Docker-based web service
+3. **Environment Variables:** Set in Render Dashboard:
+   - `OPENAI_API_KEY` (required)
+   - `FLASK_ENV=production`
+   - `OPENAI_MODEL=gpt-4o-mini`
+4. **Keep-Alive:** Extension pings backend every 10 minutes to prevent spin-down
+5. **Cold Start:** First request after 15min idle takes 30-60 seconds
+
+### Docker Deployment
+
+```bash
+cd backend
+docker build -t tos-helper-api .
+docker run -p 10000:10000 -e OPENAI_API_KEY=your_key tos-helper-api
+```
 
 ## File Structure
 
 ```
 tldr/
 ├── extension/
-│   ├── manifest.json          # Chrome extension configuration and permissions
-│   ├── background.js          # Service worker for extension lifecycle and API communication
+│   ├── manifest.json          # Chrome extension configuration (v1.0.0)
+│   ├── background.js          # Service worker with environment detection and keep-alive
 │   ├── detector.js            # TOS page detection and entry point for content scripts
 │   ├── controller.js          # Analysis workflow orchestrator and state management
 │   ├── config.js              # Configuration constants for detection and analysis
+│   ├── config.backend.js      # Backend URL configuration with auto-detection
 │   ├── accessibility.js       # Focus trap implementation for accessible modals
-│   ├── styles.css             # Global styling for extension UI components
 │   ├── panels/
 │   │   ├── promptPanel.js     # Initial TOS detection prompt with action buttons
 │   │   ├── loadingPanel.js    # Analysis loading state with cancellation option
@@ -38,13 +90,17 @@ tldr/
 │       ├── base.css           # Design tokens, variables, animations, accessibility helpers
 │       ├── components.css     # Shared button, badge, alert, card components
 │       ├── panels.css         # Panel-specific layouts for all modal dialogs
-│       └── popup.css          # Legacy popup styles (maintained for compatibility)
-└── backend/
-    ├── app.py                 # Flask API server with TOS analysis endpoint
-    ├── analyzer.py            # OpenAI integration for TOS analysis generation
-    ├── requirements.txt       # Python dependencies for Flask and OpenAI
-    ├── .env.example           # Template for environment variables
-    └── dummy_analysis.json    # Mock response for testing without API calls
+│       └── popup.css          # Browser action popup styles
+├── backend/
+│   ├── app.py                 # Flask API server (production CORS, health checks)
+│   ├── analyzer.py            # OpenAI integration for TOS analysis generation
+│   ├── requirements.txt       # Python dependencies (includes gunicorn)
+│   ├── Dockerfile             # Production Docker container configuration
+│   ├── .dockerignore          # Docker build exclusions
+│   └── .env.example           # Template for environment variables
+├── render.yaml                # Render deployment configuration
+├── INSTALL.md                 # User installation guide
+└── README.md                  # This file
 ```
 
 ## Accessibility
