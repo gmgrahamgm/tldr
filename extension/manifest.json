@@ -1,0 +1,45 @@
+{
+    "manifest_version": 3,
+    "name": "TOS Helper",
+    "version": "1.0.0",
+    "description": "Automatically detects Terms of Service pages and provides concise summaries with trust scores",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://localhost:5000/*",
+        "https://tldr-xv48.onrender.com/*"
+    ],
+    "action": {
+        "default_title": "TOS Helper"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
+            "js": [
+                "config.js",
+                "accessibility.js",
+                "panels/promptPanel.js",
+                "panels/loadingPanel.js",
+                "panels/summaryPanel.js",
+                "panels/popupPanel.js",
+                "controller.js",
+                "detector.js"
+            ],
+            "css": [
+                "styles/base.css",
+                "styles/components.css",
+                "styles/panels.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ]
+}

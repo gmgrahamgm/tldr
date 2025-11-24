@@ -1,0 +1,174 @@
+/* TOS Helper - Browser Action Popup Styles */
+/* Contains styles specific to the extension popup UI */
+
+.popup-container {
+    width: 320px;
+    padding: var(--tos-spacing-base);
+    background: var(--tos-bg-primary);
+    border-radius: var(--tos-radius-lg);
+}
+
+/* ===========================
+   Popup Header
+   =========================== */
+
+.popup-header {
+    margin-bottom: var(--tos-spacing-base);
+    padding-bottom: var(--tos-spacing-md);
+    border-bottom: 2px solid var(--tos-border-color);
+}
+
+.popup-title {
+    font-size: var(--tos-font-lg);
+    font-weight: var(--tos-font-bold);
+    color: var(--tos-primary-color);
+    margin-bottom: var(--tos-spacing-xs);
+}
+
+.popup-url {
+    font-size: var(--tos-font-xs);
+    color: var(--tos-secondary-color);
+    word-break: break-all;
+}
+
+/* ===========================
+   Popup Status Messages
+   =========================== */
+
+.popup-status {
+    padding: var(--tos-spacing-md);
+    margin-bottom: var(--tos-spacing-base);
+    border-radius: var(--tos-radius-base);
+    background: var(--tos-bg-tertiary);
+    font-size: var(--tos-font-sm);
+    line-height: var(--tos-line-height-base);
+    color: var(--tos-text-primary);
+    border: 1px solid var(--tos-border-color);
+}
+
+.popup-status--cached {
+    background: var(--tos-success-bg);
+    color: var(--tos-success-color);
+    border-color: var(--tos-success-border);
+}
+
+.popup-status--not-tos {
+    background: var(--tos-warning-bg);
+    color: var(--tos-warning-color);
+    border-color: var(--tos-warning-border);
+}
+
+.popup-status--warning {
+    background: var(--tos-warning-bg);
+    color: var(--tos-warning-color);
+    border-left: 3px solid var(--tos-risk-medium);
+    border-color: var(--tos-warning-border);
+}
+
+.popup-status--error {
+    background: var(--tos-risk-high-bg);
+    color: var(--tos-risk-high);
+    border-color: var(--tos-risk-high-border);
+}
+
+/* ===========================
+   Popup Buttons
+   =========================== */
+
+.popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-btn {
+    width: 100%;
+    padding: 10px var(--tos-spacing-base);
+    border: none;
+    border-radius: var(--tos-radius-base);
+    font-size: var(--tos-font-base);
+    font-weight: var(--tos-font-semibold);
+    cursor: pointer;
+    transition: all var(--tos-transition-base);
+    font-family: inherit;
+    line-height: var(--tos-line-height-base);
+}
+
+.popup-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.popup-btn:focus-visible {
+    outline: var(--tos-focus-ring);
+    outline-offset: var(--tos-focus-offset);
+}
+
+.popup-btn--primary {
+    background: var(--tos-primary-color);
+    color: var(--tos-text-inverse);
+}
+
+.popup-btn--primary:hover:not(:disabled) {
+    background: var(--tos-primary-hover);
+}
+
+.popup-btn--secondary {
+    background: var(--tos-bg-tertiary);
+    color: var(--tos-text-secondary);
+    border: 1px solid var(--tos-border-color);
+}
+
+.popup-btn--secondary:hover:not(:disabled) {
+    background: var(--tos-border-color);
+    color: var(--tos-text-primary);
+}
+
+.popup-btn--danger {
+    background: var(--tos-risk-high-bg);
+    color: var(--tos-risk-high);
+    border: 1px solid var(--tos-risk-high-border);
+}
+
+.popup-btn--danger:hover:not(:disabled) {
+    background: var(--tos-risk-high);
+    color: var(--tos-text-inverse);
+}
+
+/* ===========================
+   Popup Cache Info
+   =========================== */
+
+.popup-cache-info {
+    margin-top: var(--tos-spacing-md);
+    padding-top: var(--tos-spacing-md);
+    border-top: 1px solid var(--tos-border-color);
+    font-size: var(--tos-font-xs);
+    color: var(--tos-secondary-color);
+}
+
+.popup-cache-info strong {
+    color: var(--tos-text-primary);
+}
+
+/* ===========================
+   Popup Loading State
+   =========================== */
+
+.popup-loading {
+    text-align: center;
+    padding: var(--tos-spacing-lg);
+    color: var(--tos-secondary-color);
+}
+
+.popup-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--tos-border-color);
+    border-top-color: var(--tos-primary-color);
+    border-radius: 50%;
+    animation: tos-spin 0.8s linear infinite;
+    margin-right: var(--tos-spacing-sm);
+    vertical-align: middle;
+}

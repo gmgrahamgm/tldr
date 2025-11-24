@@ -1,0 +1,368 @@
+/* TOS Helper - Base Styles and Design Tokens */
+/* Contains CSS custom properties, resets, and global design tokens */
+
+/* ===========================
+   Design Tokens - Light Mode
+   =========================== */
+:root {
+    /* Primary Colors */
+    --tos-primary-color: #2563eb;
+    --tos-primary-hover: #1d4ed8;
+    --tos-primary-active: #1e40af;
+
+    /* Secondary Colors */
+    --tos-secondary-color: #64748b;
+    --tos-secondary-hover: #475569;
+
+    /* Background Colors */
+    --tos-bg-primary: #ffffff;
+    --tos-bg-secondary: #f8fafc;
+    --tos-bg-tertiary: #f1f5f9;
+    --tos-bg-overlay: rgba(0, 0, 0, 0.5);
+
+    /* Text Colors */
+    --tos-text-primary: #1e293b;
+    --tos-text-secondary: #475569;
+    --tos-text-muted: #64748b;
+    --tos-text-inverse: #ffffff;
+
+    /* Border Colors */
+    --tos-border-color: #e2e8f0;
+    --tos-border-hover: #cbd5e1;
+    --tos-border-focus: #94a3b8;
+
+    /* Risk/Status Colors */
+    --tos-risk-high: #dc2626;
+    --tos-risk-high-bg: #fee2e2;
+    --tos-risk-high-border: #fecaca;
+
+    --tos-risk-medium: #f59e0b;
+    --tos-risk-medium-bg: #fef3c7;
+    --tos-risk-medium-border: #fde68a;
+
+    --tos-risk-low: #10b981;
+    --tos-risk-low-bg: #d1fae5;
+    --tos-risk-low-border: #a7f3d0;
+
+    --tos-risk-analyzing: #6366f1;
+    --tos-risk-analyzing-bg: #e0e7ff;
+
+    /* Success/Info Colors */
+    --tos-success-color: #059669;
+    --tos-success-bg: #dcfce7;
+    --tos-success-border: #86efac;
+
+    --tos-info-color: #0284c7;
+    --tos-info-bg: #dbeafe;
+    --tos-info-border: #93c5fd;
+
+    --tos-warning-color: #b45309;
+    --tos-warning-bg: #fef3c7;
+    --tos-warning-border: #fcd34d;
+
+    /* Spacing Scale */
+    --tos-spacing-xs: 4px;
+    --tos-spacing-sm: 8px;
+    --tos-spacing-md: 12px;
+    --tos-spacing-base: 16px;
+    --tos-spacing-lg: 20px;
+    --tos-spacing-xl: 24px;
+    --tos-spacing-2xl: 32px;
+    --tos-spacing-3xl: 40px;
+
+    /* Typography Scale */
+    --tos-font-xs: 11px;
+    --tos-font-sm: 13px;
+    --tos-font-base: 14px;
+    --tos-font-md: 16px;
+    --tos-font-lg: 18px;
+    --tos-font-xl: 22px;
+    --tos-font-2xl: 24px;
+    --tos-font-3xl: 42px;
+    --tos-font-4xl: 56px;
+
+    /* Font Weights */
+    --tos-font-normal: 400;
+    --tos-font-medium: 500;
+    --tos-font-semibold: 600;
+    --tos-font-bold: 700;
+
+    /* Line Heights */
+    --tos-line-height-tight: 1.4;
+    --tos-line-height-base: 1.5;
+    --tos-line-height-relaxed: 1.6;
+
+    /* Border Radius */
+    --tos-radius-sm: 4px;
+    --tos-radius-base: 6px;
+    --tos-radius-md: 8px;
+    --tos-radius-lg: 12px;
+    --tos-radius-full: 9999px;
+
+    /* Shadows */
+    --tos-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --tos-shadow-base: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --tos-shadow-md: 0 6px 12px rgba(0, 0, 0, 0.12);
+    --tos-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --tos-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+    /* Focus Ring */
+    --tos-focus-ring: 3px solid var(--tos-primary-color);
+    --tos-focus-offset: 2px;
+    --tos-focus-glow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+
+    /* Transitions */
+    --tos-transition-fast: 0.15s ease;
+    --tos-transition-base: 0.2s ease;
+    --tos-transition-slow: 0.3s ease;
+
+    /* Z-Index Scale */
+    --tos-z-prompt: 999999;
+    --tos-z-modal: 1000000;
+}
+
+/* ===========================
+   Design Tokens - Dark Mode
+   =========================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Primary Colors - Adjusted for dark backgrounds */
+        --tos-primary-color: #3b82f6;
+        --tos-primary-hover: #60a5fa;
+        --tos-primary-active: #2563eb;
+
+        /* Secondary Colors */
+        --tos-secondary-color: #94a3b8;
+        --tos-secondary-hover: #cbd5e1;
+
+        /* Background Colors */
+        --tos-bg-primary: #1e293b;
+        --tos-bg-secondary: #0f172a;
+        --tos-bg-tertiary: #334155;
+        --tos-bg-overlay: rgba(0, 0, 0, 0.8);
+
+        /* Text Colors */
+        --tos-text-primary: #f1f5f9;
+        --tos-text-secondary: #cbd5e1;
+        --tos-text-muted: #94a3b8;
+        --tos-text-inverse: #0f172a;
+
+        /* Border Colors */
+        --tos-border-color: #334155;
+        --tos-border-hover: #475569;
+        --tos-border-focus: #64748b;
+
+        /* Risk/Status Colors - Higher contrast for dark mode */
+        --tos-risk-high: #f87171;
+        --tos-risk-high-bg: #7f1d1d;
+        --tos-risk-high-border: #991b1b;
+
+        --tos-risk-medium: #fbbf24;
+        --tos-risk-medium-bg: #78350f;
+        --tos-risk-medium-border: #92400e;
+
+        --tos-risk-low: #34d399;
+        --tos-risk-low-bg: #064e3b;
+        --tos-risk-low-border: #065f46;
+
+        --tos-risk-analyzing: #818cf8;
+        --tos-risk-analyzing-bg: #312e81;
+
+        /* Success/Info Colors */
+        --tos-success-color: #6ee7b7;
+        --tos-success-bg: #064e3b;
+        --tos-success-border: #047857;
+
+        --tos-info-color: #7dd3fc;
+        --tos-info-bg: #0c4a6e;
+        --tos-info-border: #0369a1;
+
+        --tos-warning-color: #fcd34d;
+        --tos-warning-bg: #78350f;
+        --tos-warning-border: #92400e;
+
+        /* Shadows - Lighter for dark mode */
+        --tos-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --tos-shadow-base: 0 4px 6px rgba(0, 0, 0, 0.4);
+        --tos-shadow-md: 0 6px 12px rgba(0, 0, 0, 0.5);
+        --tos-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+        --tos-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
+    }
+}
+
+/* ===========================
+   Base Reset & Global Styles
+   =========================== */
+
+/* Box sizing reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Font family base - Force extension fonts to override page styles */
+.tos-helper-panel,
+.tos-helper-panel *,
+.tos-helper-overlay,
+.tos-helper-overlay *,
+.tos-helper-popup-panel,
+.tos-helper-popup-panel *,
+.popup-container,
+.popup-container * {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', 'Arial', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus visible styles */
+:focus-visible {
+    outline: var(--tos-focus-ring);
+    outline-offset: var(--tos-focus-offset);
+}
+
+/* ===========================
+   Accessibility Enhancements
+   =========================== */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    :root {
+        --tos-border-color: currentColor;
+        --tos-shadow-base: none;
+        --tos-shadow-lg: none;
+    }
+
+    .tos-helper-panel,
+    .tos-helper-overlay .tos-helper-summary-content,
+    .popup-container {
+        border-width: 3px;
+    }
+
+    .tos-helper-btn:focus,
+    .tos-helper-close-btn:focus,
+    .tos-helper-section-toggle:focus,
+    .popup-btn:focus {
+        outline-width: 4px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .tos-helper-spinner {
+        animation: none;
+        border-top-color: var(--tos-border-color);
+        opacity: 0.6;
+    }
+}
+
+/* Print Support - Hide extension UI when printing */
+@media print {
+
+    .tos-helper-panel,
+    .tos-helper-overlay,
+    .popup-container {
+        display: none !important;
+    }
+}
+
+/* ===========================
+   Screen Reader Only Content
+   =========================== */
+
+.tos-helper-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Skip Links */
+.tos-helper-skip-links {
+    position: absolute;
+    top: var(--tos-spacing-sm);
+    left: var(--tos-spacing-sm);
+    z-index: 99999;
+}
+
+.tos-helper-skip-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tos-helper-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.tos-helper-skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: var(--tos-spacing-sm) var(--tos-spacing-base);
+    background: var(--tos-primary-color);
+    color: var(--tos-text-inverse);
+    text-decoration: none;
+    border-radius: var(--tos-radius-sm);
+    box-shadow: var(--tos-shadow-lg);
+    display: inline-block;
+}
+
+/* Alert Details */
+.tos-helper-alert__details {
+    margin-top: var(--tos-spacing-xs);
+    font-size: var(--tos-font-sm);
+    opacity: 0.9;
+}
+
+/* ===========================
+   Animation Keyframes
+   =========================== */
+
+@keyframes tos-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes tos-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes tos-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
