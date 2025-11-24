@@ -1,0 +1,101 @@
+{
+    "overview": [
+        "This is a mock analysis generated for testing purposes without using the OpenAI API.",
+        "By using this service, you agree to allow the company to collect and use your personal information.",
+        "The company may share your data with third-party partners for marketing purposes.",
+        "You have limited control over your data and cannot easily delete your account.",
+        "The company reserves the right to change these terms at any time without notice."
+    ],
+    "risks": [
+        {
+            "title": "Extensive Data Collection",
+            "severity": "high",
+            "description": "The service collects a wide range of personal information including browsing history, location data, and device information.",
+            "example": "Your location data could be sold to advertisers who might target you with location-specific ads."
+        },
+        {
+            "title": "Third-Party Data Sharing",
+            "severity": "high",
+            "description": "Your personal data may be shared with numerous third-party partners without explicit consent.",
+            "example": "Marketing companies might receive your email address and purchase history to send targeted advertisements."
+        },
+        {
+            "title": "Limited User Rights",
+            "severity": "medium",
+            "description": "Users have minimal control over their data and face obstacles when trying to delete accounts.",
+            "example": "You may need to contact customer support multiple times and wait weeks to delete your account."
+        },
+        {
+            "title": "Unilateral Terms Changes",
+            "severity": "medium",
+            "description": "The company can modify terms of service at any time without requiring your consent.",
+            "example": "Privacy protections you signed up for could be removed without notification."
+        }
+    ],
+    "dataSharing": {
+        "collected": [
+            "email address",
+            "name",
+            "browsing history",
+            "IP address",
+            "device information",
+            "location data",
+            "purchase history"
+        ],
+        "internalUse": [
+            "improve service functionality",
+            "personalize user experience",
+            "internal analytics and research",
+            "marketing and promotional communications"
+        ],
+        "thirdParties": [
+            "Advertising & marketing partners",
+            "Analytics & measurement",
+            "Service providers",
+            "Payment processors"
+        ],
+        "thirdPartiesDetailed": [
+            {
+                "category": "Advertising & marketing partners",
+                "details": "Your data is shared with advertising networks for targeted marketing and retargeting campaigns."
+            },
+            {
+                "category": "Analytics & measurement",
+                "details": "Analytics providers receive usage data to track engagement and site performance."
+            },
+            {
+                "category": "Service providers",
+                "details": "Cloud hosting and IT infrastructure providers process your data as part of service delivery."
+            },
+            {
+                "category": "Payment processors",
+                "details": "Payment information is shared with payment processors to complete transactions."
+            }
+        ],
+        "retention": "Data is retained indefinitely unless you request deletion, which may take up to 90 days to process.",
+        "userControls": "Limited controls available. You can opt out of some marketing emails but cannot prevent all data collection or sharing."
+    },
+    "examples": [
+        "If you make a purchase, your payment information and purchase history may be shared with marketing partners.",
+        "Your browsing behavior on the site can be tracked and used to build an advertising profile.",
+        "Location data from your mobile device may be collected whenever you use the service.",
+        "Even after account deletion, some of your data may remain in backup systems for extended periods.",
+        "The company may change privacy policies without notification, reducing your protections."
+    ],
+    "scores": {
+        "dataCollection": 0.35,
+        "thirdPartySharing": 0.30,
+        "userControl": 0.40,
+        "termFairness": 0.45
+    },
+    "riskLevel": "high",
+    "explanation": "Multiple concerning practices including extensive data collection and aggressive third-party sharing.",
+    "overallScore": 38,
+    "scoreBreakdown": {
+        "dataCollection": 35,
+        "thirdPartySharing": 30,
+        "userControl": 40,
+        "termFairness": 45
+    },
+    "scoreExplanation": "Extensive data collection, aggressive third-party sharing, limited user control."
+}
