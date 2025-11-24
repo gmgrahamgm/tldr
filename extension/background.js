@@ -6,9 +6,42 @@ console.log('TOS Helper: Background service worker initialized');
 // Backend URL with environment detection
 let BACKEND_URL = null;
 
+/**
+ * Detect if we're running in a development environment
+ * Checks if we can reach localhost backend
+ */
+async function detectEnvironment() {
+    const LOCAL_URL = 'http://localhost:5000';
+    const PRODUCTION_URL = 'https://tldr-xv48.onrender.com';
+
+    try {
+        // Try to ping local backend health endpoint
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1000); // 1 second timeout
+
+        const response = await fetch(`${LOCAL_URL}/api/health`, {
+            method: 'GET',
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+            console.log('TOS Helper: Local backend detected, using development mode');
+            return LOCAL_URL;
+        }
+    } catch (error) {
+        // Local backend not available, use production
+        console.log('TOS Helper: Local backend not available, using production mode');
+    }
+
+    console.log('TOS Helper: Using production backend:', PRODUCTION_URL);
+    return PRODUCTION_URL;
+}
+
 // Initialize backend URL on startup
 (async () => {
-    BACKEND_URL = await getBackendUrl();
+    BACKEND_URL = await detectEnvironment();
     console.log('TOS Helper: Backend URL configured:', BACKEND_URL);
 
     // Start keep-alive ping for production backend
