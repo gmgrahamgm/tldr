@@ -29,8 +29,6 @@ tldr/
 │   ├── config.js              # Configuration constants for detection and analysis
 │   ├── accessibility.js       # Focus trap implementation for accessible modals
 │   ├── styles.css             # Global styling for extension UI components
-│   ├── popup.html             # Legacy browser action popup (now unused)
-│   ├── popup.js               # Legacy popup script (now unused)
 │   ├── panels/
 │   │   ├── promptPanel.js     # Initial TOS detection prompt with action buttons
 │   │   ├── loadingPanel.js    # Analysis loading state with cancellation option
