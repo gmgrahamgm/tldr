@@ -7,7 +7,7 @@
  */
 async function detectEnvironment() {
     const LOCAL_URL = 'http://localhost:5000';
-    const PRODUCTION_URL = 'https://tos-helper-api.onrender.com';
+    const PRODUCTION_URL = 'https://tldr-xv48.onrender.com';
 
     try {
         // Try to ping local backend health endpoint

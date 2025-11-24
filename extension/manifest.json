@@ -10,7 +10,7 @@
     ],
     "host_permissions": [
         "http://localhost:5000/*",
-        "https://tos-helper-api.onrender.com/*"
+        "https://tldr-xv48.onrender.com/*"
     ],
     "action": {
         "default_title": "TOS Helper"
