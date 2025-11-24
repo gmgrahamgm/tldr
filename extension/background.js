@@ -3,8 +3,19 @@
 
 console.log('TOS Helper: Background service worker initialized');
 
-// Configuration
-const BACKEND_URL = 'http://localhost:5000';
+// Backend URL with environment detection
+let BACKEND_URL = null;
+
+// Initialize backend URL on startup
+(async () => {
+    BACKEND_URL = await getBackendUrl();
+    console.log('TOS Helper: Backend URL configured:', BACKEND_URL);
+
+    // Start keep-alive ping for production backend
+    if (BACKEND_URL.includes('onrender.com')) {
+        startKeepAlivePing();
+    }
+})();
 
 // Track cancelled request IDs to prevent caching
 const cancelledRequests = new Set();
@@ -300,5 +311,57 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Return true to indicate async response
     return true;
 });
+
+/**
+ * Keep-alive ping mechanism to prevent Render free tier from spinning down
+ * Pings every 10 minutes while extension is active
+ */
+let keepAliveInterval = null;
+
+function startKeepAlivePing() {
+    // Clear any existing interval
+    if (keepAliveInterval) {
+        clearInterval(keepAliveInterval);
+    }
+
+    console.log('TOS Helper: Starting keep-alive pings for production backend');
+
+    // Ping immediately
+    pingBackendHealth();
+
+    // Then ping every 10 minutes (600000ms)
+    keepAliveInterval = setInterval(() => {
+        pingBackendHealth();
+    }, 600000);
+}
+
+function stopKeepAlivePing() {
+    if (keepAliveInterval) {
+        clearInterval(keepAliveInterval);
+        keepAliveInterval = null;
+        console.log('TOS Helper: Keep-alive pings stopped');
+    }
+}
+
+async function pingBackendHealth() {
+    if (!BACKEND_URL) return;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/health`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('TOS Helper: Keep-alive ping successful', {
+                status: data.status,
+                model: data.model,
+                timestamp: new Date().toISOString()
+            });
+        }
+    } catch (error) {
+        console.warn('TOS Helper: Keep-alive ping failed', error.message);
+    }
+}
 
 console.log('TOS Helper: Background service worker ready');

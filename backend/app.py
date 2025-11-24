@@ -15,7 +15,20 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for Chrome extension
+
+# Configure CORS for Chrome extension origins
+# Allow both localhost (dev) and chrome-extension protocol (production)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "chrome-extension://*",  # Chrome extensions
+            "http://localhost:*",     # Local development
+            "http://127.0.0.1:*"      # Local development alternative
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 # Configuration
 DUMMY_ANALYSIS = os.getenv('DUMMY_ANALYSIS', 'false').lower() == 'true'
@@ -31,9 +44,11 @@ def load_dummy_analysis():
 @app.route('/api/health', methods=['GET'])
 def health():
     """Health check endpoint"""
+    print("[HEALTH CHECK] Endpoint pinged")
     return jsonify({
         'status': 'healthy',
-        'model': OPENAI_MODEL
+        'model': OPENAI_MODEL,
+        'dummy_mode': DUMMY_ANALYSIS
     })
 
 @app.route('/api/analyze', methods=['POST'])
@@ -117,4 +132,4 @@ if __name__ == '__main__':
         print(f"OpenAI Model: {OPENAI_MODEL}")
     print(f"Debug mode: {debug}")
     
-    app.run(host='127.0.0.1', port=port, debug=debug)
+    app.run(host='0.0.0.0', port=port, debug=debug)

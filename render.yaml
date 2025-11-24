@@ -1,0 +1,27 @@
+# Render deployment configuration for TOS Helper
+# See: https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API - Flask application in Docker
+  - type: web
+    name: tos-helper-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon  # Change to your preferred region
+    branch: production
+    healthCheckPath: /api/health
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: BACKEND_PORT
+        value: 10000
+      - key: OPENAI_API_KEY
+        sync: false  # Set manually in Render Dashboard for security
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: DUMMY_ANALYSIS
+        value: false
+      - key: PORT
+        value: 10000
