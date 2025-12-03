@@ -139,15 +139,32 @@ window.handleSummarize = function () {
                     }
                 };
                 
-                if (window.updateSummaryPanel) {
-                    window.updateSummaryPanel(dummyData);
+                // Ensure panel exists before updating
+                if (window.tosHelperSummaryPanel && document.body.contains(window.tosHelperSummaryPanel)) {
+                    if (window.updateSummaryPanel) {
+                        window.updateSummaryPanel(dummyData);
+                    }
+                } else {
+                    console.warn('TOS Helper: Summary panel missing, creating new one');
+                    if (window.showSummaryPanel) {
+                        window.showSummaryPanel(dummyData);
+                    }
                 }
                 return;
             }
 
             // Update summary panel with real data
-            if (window.updateSummaryPanel) {
-                window.updateSummaryPanel(response.data);
+            // Ensure panel exists before updating
+            if (window.tosHelperSummaryPanel && document.body.contains(window.tosHelperSummaryPanel)) {
+                if (window.updateSummaryPanel) {
+                    console.log('TOS Helper: Updating existing panel with real data');
+                    window.updateSummaryPanel(response.data);
+                }
+            } else {
+                console.warn('TOS Helper: Summary panel missing, creating new one');
+                if (window.showSummaryPanel) {
+                    window.showSummaryPanel(response.data);
+                }
             }
         });
     } catch (error) {
