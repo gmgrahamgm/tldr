@@ -366,23 +366,38 @@ console.log('TOS Helper: Content script loaded on', window.location.href);
 
     // Expose extraction function for popup panel
     window.extractTOSText = function () {
+        console.log('TOS Helper: Manual extraction requested');
+        console.log('TOS Helper: DOM readyState:', document.readyState);
+        console.log('TOS Helper: Body text length:', document.body?.textContent?.length || 0);
+        
         const tosText = extractTOSText();
         lastExtractedTOSText = tosText;
-        console.log('TOS Helper: TOS text extracted manually', { length: tosText.length });
+        
+        console.log('TOS Helper: TOS text extracted manually', { 
+            length: tosText.length,
+            preview: tosText.substring(0, 150) + '...'
+        });
+        
+        // Validation check
+        if (tosText.length < 100) {
+            console.error('TOS Helper: Extracted text is suspiciously short!');
+            console.error('TOS Helper: This may indicate the page content is not yet loaded');
+        }
+        
         return tosText;
     };
 
     // Run detection when DOM is ready
-    // Use a small delay to ensure page content is fully rendered
+    // Use a delay to ensure page content is fully rendered
     function initWithDelay() {
         // Wait for DOM to be interactive and give dynamic content time to load
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(init, 500); // 500ms delay after DOM ready
+                setTimeout(init, 1500); // 1500ms delay after DOM ready for dynamic content
             });
         } else {
-            // If already loaded, wait a bit for dynamic content
-            setTimeout(init, 500);
+            // If already loaded, wait for dynamic content
+            setTimeout(init, 1500); // 1500ms delay for dynamic content
         }
     }
 
