@@ -16,6 +16,22 @@ window.tosHelperCurrentRequestId = null;
 window.handleSummarize = function () {
     console.log('TOS Helper: User requested summary');
 
+    // IMPORTANT: Re-extract TOS text to ensure we have fresh content
+    console.log('TOS Helper: Re-scanning page for fresh content');
+    if (window.extractTOSText) {
+        window.tosHelperCurrentText = window.extractTOSText();
+        console.log('TOS Helper: Fresh text extracted', { length: window.tosHelperCurrentText.length });
+    }
+
+    // Validate we have content
+    if (!window.tosHelperCurrentText || window.tosHelperCurrentText.trim().length < 100) {
+        console.error('TOS Helper: Insufficient text content', { length: window.tosHelperCurrentText?.length || 0 });
+        if (window.showError) {
+            window.showError('Could not extract enough text from this page. Please try again.');
+        }
+        return;
+    }
+
     // Reset cancellation flag and generate unique request ID
     window.tosHelperAnalysisCancelled = false;
     const requestId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -84,6 +100,51 @@ window.handleSummarize = function () {
 
             console.log('TOS Helper: Analysis complete, updating UI');
 
+            // Validate response - check if all scores are zero (indicates empty text was sent)
+            const overallScore = response.data.overallTrustScore || response.data.overallScore || 0;
+            if (overallScore === 0) {
+                console.warn('TOS Helper: Received zero score - likely empty text was analyzed');
+                console.log('TOS Helper: Using dummy analysis as fallback');
+                
+                // Use dummy analysis data as fallback
+                const dummyData = {
+                    overallTrustScore: 45,
+                    overallScore: 45,
+                    riskLevel: 'medium',
+                    explanation: 'Unable to fully analyze this page. Please try refreshing and analyzing again.',
+                    overview: [
+                        'Analysis Error: The page content could not be properly extracted.',
+                        'This may be due to dynamic content loading or page structure.',
+                        'Please refresh the page and try again.'
+                    ],
+                    risks: [
+                        {
+                            title: 'Analysis Incomplete',
+                            severity: 'medium',
+                            description: 'The Terms of Service content could not be fully analyzed.',
+                            example: 'Try refreshing the page and running the analysis again.'
+                        }
+                    ],
+                    dataSharing: {
+                        collected: ['Unable to determine'],
+                        internalUse: ['Unable to determine'],
+                        thirdParties: ['Unable to determine']
+                    },
+                    examples: ['Please refresh the page and try analyzing again.'],
+                    scoreBreakdown: {
+                        dataCollection: 0,
+                        thirdPartySharing: 0,
+                        userControl: 0,
+                        termFairness: 0
+                    }
+                };
+                
+                if (window.updateSummaryPanel) {
+                    window.updateSummaryPanel(dummyData);
+                }
+                return;
+            }
+
             // Update summary panel with real data
             if (window.updateSummaryPanel) {
                 window.updateSummaryPanel(response.data);
@@ -107,6 +168,22 @@ window.handleSummarize = function () {
  */
 window.handleSummarizeWithCacheClear = function (domain) {
     console.log('TOS Helper: Re-analyzing with cache clear on success');
+
+    // IMPORTANT: Re-extract TOS text to ensure we have fresh content
+    console.log('TOS Helper: Re-scanning page for fresh content');
+    if (window.extractTOSText) {
+        window.tosHelperCurrentText = window.extractTOSText();
+        console.log('TOS Helper: Fresh text extracted', { length: window.tosHelperCurrentText.length });
+    }
+
+    // Validate we have content
+    if (!window.tosHelperCurrentText || window.tosHelperCurrentText.trim().length < 100) {
+        console.error('TOS Helper: Insufficient text content', { length: window.tosHelperCurrentText?.length || 0 });
+        if (window.showError) {
+            window.showError('Could not extract enough text from this page. Please try again.');
+        }
+        return;
+    }
 
     // Reset cancellation flag and generate unique request ID
     window.tosHelperAnalysisCancelled = false;
