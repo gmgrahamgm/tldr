@@ -183,7 +183,7 @@ window.hideSummaryPanel = function () {
  */
 window.updateSummaryPanel = function (data, fromCache = false, cacheTimestamp = null) {
     const summaryPanel = getSummaryPanel();
-    
+
     // Defensive check: If panel doesn't exist or isn't in DOM, create it
     if (!summaryPanel || !document.body.contains(summaryPanel)) {
         console.warn('TOS Helper: Summary panel not found or not in DOM, creating new one');
@@ -191,7 +191,7 @@ window.updateSummaryPanel = function (data, fromCache = false, cacheTimestamp = 
         window.showSummaryPanel(data);
         return;
     }
-    
+
     console.log('TOS Helper: Updating existing summary panel with analysis data');
 
     const siteName = new URL(window.location.href).hostname;

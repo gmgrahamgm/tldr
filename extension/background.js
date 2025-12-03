@@ -97,7 +97,7 @@ async function getCachedAnalysis(domain) {
     return new Promise((resolve) => {
         chrome.storage.local.get(['tosCache'], (result) => {
             const cache = result.tosCache || {};
-            
+
             // Check exact match first
             if (cache[domain]) {
                 console.log('TOS Helper: Cache hit for exact domain:', domain);
@@ -110,13 +110,13 @@ async function getCachedAnalysis(domain) {
                 }
                 return;
             }
-            
+
             // Try variants (with/without www)
             const variants = [
                 domain.replace('www.', ''),
                 'www.' + domain.replace('www.', '')
             ];
-            
+
             for (const variant of variants) {
                 if (cache[variant] && cache[variant].analysis && cache[variant].analysis.overallTrustScore !== undefined) {
                     console.log('TOS Helper: Cache hit for variant:', variant, 'of domain:', domain);
@@ -124,7 +124,7 @@ async function getCachedAnalysis(domain) {
                     return;
                 }
             }
-            
+
             console.log('TOS Helper: Cache miss for domain:', domain);
             resolve(null);
         });
@@ -183,7 +183,7 @@ async function clearCacheForDomain(domain) {
 
             // Remove from disabled sites list - check all variants
             const updatedDisabledSites = disabledSites.filter(site => {
-                const shouldRemove = domainVariants.some(variant => 
+                const shouldRemove = domainVariants.some(variant =>
                     site === variant || site.includes(domain.replace('www.', ''))
                 );
                 if (shouldRemove) {
@@ -212,7 +212,7 @@ async function clearCacheForDomain(domain) {
                 tosCache: cache,
                 disabledSites: updatedDisabledSites
             };
-            
+
             if (clearedLastDetected) {
                 updates.lastDetectedTOS = null;
             }
@@ -222,8 +222,8 @@ async function clearCacheForDomain(domain) {
                 console.log('TOS Helper: After clear - Cache keys:', Object.keys(cache));
                 console.log('TOS Helper: Removed entries:', removed);
                 console.log('TOS Helper: Updated disabled sites:', updatedDisabledSites);
-                resolve({ 
-                    success: true, 
+                resolve({
+                    success: true,
                     cleared: removed,
                     remainingCacheKeys: Object.keys(cache)
                 });

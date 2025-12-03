@@ -105,7 +105,7 @@ window.handleSummarize = function () {
             if (overallScore === 0) {
                 console.warn('TOS Helper: Received zero score - likely empty text was analyzed');
                 console.log('TOS Helper: Using dummy analysis as fallback');
-                
+
                 // Use dummy analysis data as fallback
                 const dummyData = {
                     overallTrustScore: 45,
@@ -138,7 +138,7 @@ window.handleSummarize = function () {
                         termFairness: 0
                     }
                 };
-                
+
                 // Ensure panel exists before updating
                 if (window.tosHelperSummaryPanel && document.body.contains(window.tosHelperSummaryPanel)) {
                     if (window.updateSummaryPanel) {
