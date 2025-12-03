@@ -91,12 +91,42 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 /**
  * Get cached analysis for a domain
+ * Checks for exact match and common domain variants (with/without www)
  */
 async function getCachedAnalysis(domain) {
     return new Promise((resolve) => {
         chrome.storage.local.get(['tosCache'], (result) => {
             const cache = result.tosCache || {};
-            resolve(cache[domain] || null);
+            
+            // Check exact match first
+            if (cache[domain]) {
+                console.log('TOS Helper: Cache hit for exact domain:', domain);
+                // Validate the cached entry has required data
+                if (cache[domain].analysis && cache[domain].analysis.overallTrustScore !== undefined) {
+                    resolve(cache[domain]);
+                } else {
+                    console.warn('TOS Helper: Cached entry is invalid/empty, treating as cache miss');
+                    resolve(null);
+                }
+                return;
+            }
+            
+            // Try variants (with/without www)
+            const variants = [
+                domain.replace('www.', ''),
+                'www.' + domain.replace('www.', '')
+            ];
+            
+            for (const variant of variants) {
+                if (cache[variant] && cache[variant].analysis && cache[variant].analysis.overallTrustScore !== undefined) {
+                    console.log('TOS Helper: Cache hit for variant:', variant, 'of domain:', domain);
+                    resolve(cache[variant]);
+                    return;
+                }
+            }
+            
+            console.log('TOS Helper: Cache miss for domain:', domain);
+            resolve(null);
         });
     });
 }
@@ -123,28 +153,80 @@ async function saveCachedAnalysis(domain, url, analysis) {
 
 /**
  * Clear cache for specific domain and remove from disabled sites
+ * Ensures complete removal of all data associated with the domain
  */
 async function clearCacheForDomain(domain) {
     return new Promise((resolve) => {
-        chrome.storage.local.get(['tosCache', 'disabledSites'], (result) => {
+        chrome.storage.local.get(['tosCache', 'disabledSites', 'lastDetectedTOS'], (result) => {
             const cache = result.tosCache || {};
             const disabledSites = result.disabledSites || [];
+            const lastDetected = result.lastDetectedTOS || null;
 
-            // Remove from cache
-            delete cache[domain];
+            console.log('TOS Helper: Clearing all data for domain:', domain);
+            console.log('TOS Helper: Before clear - Cache keys:', Object.keys(cache));
 
-            // Remove from disabled sites list
-            const updatedDisabledSites = disabledSites.filter(site => site !== domain);
+            // Remove from cache - check exact match and with/without www
+            const domainVariants = [
+                domain,
+                domain.replace('www.', ''),
+                'www.' + domain.replace('www.', '')
+            ];
 
-            chrome.storage.local.set({
+            let removed = false;
+            domainVariants.forEach(variant => {
+                if (cache[variant]) {
+                    delete cache[variant];
+                    removed = true;
+                    console.log('TOS Helper: Removed cache entry for variant:', variant);
+                }
+            });
+
+            // Remove from disabled sites list - check all variants
+            const updatedDisabledSites = disabledSites.filter(site => {
+                const shouldRemove = domainVariants.some(variant => 
+                    site === variant || site.includes(domain.replace('www.', ''))
+                );
+                if (shouldRemove) {
+                    console.log('TOS Helper: Removed from disabled sites:', site);
+                }
+                return !shouldRemove;
+            });
+
+            // Clear lastDetectedTOS if it matches this domain
+            let clearedLastDetected = false;
+            if (lastDetected && lastDetected.url) {
+                try {
+                    const detectedDomain = new URL(lastDetected.url).hostname;
+                    if (domainVariants.some(variant => detectedDomain.includes(variant.replace('www.', '')))) {
+                        lastDetected = null;
+                        clearedLastDetected = true;
+                        console.log('TOS Helper: Cleared lastDetectedTOS for domain');
+                    }
+                } catch (e) {
+                    console.warn('TOS Helper: Error parsing lastDetectedTOS URL:', e);
+                }
+            }
+
+            // Set the updated storage
+            const updates = {
                 tosCache: cache,
                 disabledSites: updatedDisabledSites
-            }, () => {
-                console.log('TOS Helper: Cache cleared for', domain);
-                if (disabledSites.includes(domain)) {
-                    console.log('TOS Helper: Removed', domain, 'from disabled sites list');
-                }
-                resolve({ success: true });
+            };
+            
+            if (clearedLastDetected) {
+                updates.lastDetectedTOS = null;
+            }
+
+            chrome.storage.local.set(updates, () => {
+                console.log('TOS Helper: Cache fully cleared for', domain);
+                console.log('TOS Helper: After clear - Cache keys:', Object.keys(cache));
+                console.log('TOS Helper: Removed entries:', removed);
+                console.log('TOS Helper: Updated disabled sites:', updatedDisabledSites);
+                resolve({ 
+                    success: true, 
+                    cleared: removed,
+                    remainingCacheKeys: Object.keys(cache)
+                });
             });
         });
     });
