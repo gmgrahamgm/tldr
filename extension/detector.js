@@ -373,10 +373,18 @@ console.log('TOS Helper: Content script loaded on', window.location.href);
     };
 
     // Run detection when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    // Add delay to ensure page content is fully rendered (fixes refresh bug)
+    function initWithDelay() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(init, 500); // Wait 500ms after DOM ready for dynamic content
+            });
+        } else {
+            // If already loaded, still wait for dynamic content to render
+            setTimeout(init, 500);
+        }
     }
+
+    initWithDelay();
 
 })();
