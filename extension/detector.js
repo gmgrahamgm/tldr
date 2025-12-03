@@ -369,21 +369,21 @@ console.log('TOS Helper: Content script loaded on', window.location.href);
         console.log('TOS Helper: Manual extraction requested');
         console.log('TOS Helper: DOM readyState:', document.readyState);
         console.log('TOS Helper: Body text length:', document.body?.textContent?.length || 0);
-        
+
         const tosText = extractTOSText();
         lastExtractedTOSText = tosText;
-        
-        console.log('TOS Helper: TOS text extracted manually', { 
+
+        console.log('TOS Helper: TOS text extracted manually', {
             length: tosText.length,
             preview: tosText.substring(0, 150) + '...'
         });
-        
+
         // Validation check
         if (tosText.length < 100) {
             console.error('TOS Helper: Extracted text is suspiciously short!');
             console.error('TOS Helper: This may indicate the page content is not yet loaded');
         }
-        
+
         return tosText;
     };
 

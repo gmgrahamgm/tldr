@@ -45,11 +45,7 @@ window.showPromptPanel = function (tosText) {
     document.body.appendChild(promptPanel);
 
     // Add event listeners - delegate to modal controller
-    document.getElementById('tos-helper-summarize-btn').addEventListener('click', () => {
-        if (window.handleSummarize) {
-            window.handleSummarize();
-        }
-    });
+    document.getElementById('tos-helper-summarize-btn').addEventListener('click', handlePromptSummarize);
     document.getElementById('tos-helper-dismiss-btn').addEventListener('click', hidePromptPanel);
     document.getElementById('tos-helper-never-btn').addEventListener('click', handleNeverForSite);
 
@@ -78,6 +74,34 @@ window.hidePromptPanel = function () {
         console.log('TOS Helper: Prompt panel hidden');
     }
 };
+
+/**
+ * Handle "Summarize TOS" button (from prompt panel)
+ */
+function handlePromptSummarize() {
+    console.log('Prompt Panel: Summarize TOS button clicked');
+
+    // Hide prompt panel immediately
+    window.hidePromptPanel();
+    console.log('Prompt Panel: Prompt hidden, extracting TOS text...');
+
+    // Extract TOS text and trigger analysis
+    if (window.extractTOSText) {
+        const tosText = window.extractTOSText();
+        window.tosHelperCurrentText = tosText;
+        console.log('Prompt Panel: TOS text extracted, starting analysis...');
+    } else {
+        console.error('Prompt Panel: extractTOSText not available');
+        return;
+    }
+
+    // Call the controller's analysis handler
+    if (window.handleSummarize) {
+        window.handleSummarize();
+    } else {
+        console.error('Prompt Panel: window.handleSummarize not available');
+    }
+}
 
 /**
  * Handle \"Never for this site\" button click
